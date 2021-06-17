@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "aheydari.ir/gotest/grpc/proto";
+
+service Greeter {
+    rpc sayHello (GRequest) returns (GResponse) {}
+}
+
+message GRequest {
+    string name = 1;
+}
+
+message GResponse {
+    string resp = 1;
+}
+
+
+
+
