@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	mathi "aheydari.ir/test/packages/math"
-	stri "aheydari.ir/test/packages/string"
+	stri "aheydari.ir/test/packages/stringUtil"
 	//stri "aheydari.ir/test/packages/string"
 )
 

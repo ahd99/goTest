@@ -1,4 +1,4 @@
-package mathi
+package math
 
 import (
 	"fmt"
