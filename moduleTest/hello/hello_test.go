@@ -19,3 +19,10 @@ func TestHello1(t *testing.T) {
 		t.Fatalf("Error. want %v - got %v", s, g)
 	}
 }
+
+func TestHello2(t *testing.T) {
+	want := "Hello, world."
+	if got := Hello2(""); got != want {
+		t.Fatalf("Error. want %v - got %v", want, got)
+	}
+}
