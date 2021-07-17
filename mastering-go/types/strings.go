@@ -1,14 +1,20 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"log"
 	"time"
 	"unicode/utf8"
 )
 
 func main() {
 	//work()
-	test3()
+	//test3()
+	//test4()
+	// test5()
+	// test6()
+	test7()
 }
 
 func test1() {
@@ -36,7 +42,7 @@ func test3() {
 	s := "\u0061\u0300"
 	fmt.Printf("%T\t%[1]v\t%[1]s\t% [1]x\t%[1]q\t%+[1]q\n", s)
 
-	s1 := "aعلی\xbdb"
+	s1 := "aعلی\xbd\u063Ab"
 	fmt.Printf("%T\t%[1]v\t%[1]s\t% [1]x\t%[1]q\t%+[1]q\n", s1)
 	r1 := []rune(s1)
 	fmt.Printf("%T\t%[1]v\t%[1]s\t% [1]x\t%[1]q\t%+[1]q\n", r1)
@@ -51,6 +57,50 @@ func test3() {
 		fmt.Printf("%d\t%d\t%#U\n", i, w, r1)
 		w = width
 	}
+}
+
+func test4() {
+	
+	// s := "aΣΔ\xbd\u03A9b"
+	// fmt.Printf("%v\n", s)	// aΣΔ�Ωb"
+	// fmt.Printf("%s\n", s)	// aΣΔ�Ωb"
+	// fmt.Printf("% x\n", s)	// 61cea3ce94bdcea962"
+	// fmt.Printf("%v\n", s)	// aΣΔ�Ωb"
+	// fmt.Printf("%q\n", s)	// "aΣΔ\xbdΩb"
+	// fmt.Printf("%+q\n", s)	// "a\u03a3\u0394\xbd\u03a9b"
+
+	//s := "aΣΔ\xbd\u03A9b"
+	// fmt.Printf("%s\n", s)	// aΣΔ�Ωb"
+	// fmt.Printf("% x\n", s)
+	// fmt.Printf("%+q\n", s)	// "a\u03a3\u0394\xbd\u03a9b"
+	// for i, r := range s {
+	// 	fmt.Printf("%d\t%#U\n", i, r)
+	// }
+
+	// s := "aΣΔ\xbd\u03A9b"
+	// fmt.Printf("%s\n", s)	// aΣΔ�Ωb"
+	// fmt.Printf("% x\n", s)
+	// r := []rune(s)
+	// fmt.Printf("%T\t%[1]v\t%[1]x\t%[1]q\n", r)
+
+	// return~
+	// for i, r := range s {
+	// 	fmt.Printf("%d\t%#U\n", i, r)
+	// }
+
+	// fmt.Println("============================")
+	
+
+	s := "ع"
+	fmt.Printf("%s\n", s)	// aΣΔ�Ωb"
+	fmt.Printf("% x\n", s)
+	for i, w := 0, 0; i < len(s); i += w {
+		r1, width := utf8.DecodeRuneInString(s[i:])
+		fmt.Printf("%d\t%d\t%#U\n", i, w, r1)
+		w = width
+	}
+
+
 }
 
 func work() {
@@ -88,4 +138,68 @@ func stat() func() {
 		dt := time.Since(t1)
 		fmt.Println(dt)
 	}
+}
+
+func test5() {
+	s := "ali heydari"
+	prefix := "ali h"
+	wrongPrefix := "alih"
+
+
+	if !IsPrefix(s, prefix) {
+		log.Fatalf("Error in isPrefix result. s:%s prefix:%s", s, prefix)
+	}
+	
+
+	if IsPrefix(s, wrongPrefix) {
+		log.Fatalf("Error in isPrefix result. s:%s prefix:%s", s, prefix)
+	}
+
+	log.Println("isPrefix success")
+}
+
+func test6() {
+	s := "ali heydari"
+	substr := "li h"
+	wrongSubstr := "lih"
+
+	if !IsContain(s, substr) {
+		log.Fatalf("Error in IsCOntain result. s:%s substr:%s", s, substr)
+	}
+	
+
+	if IsContain(s, wrongSubstr) {
+		log.Fatalf("Error in IsCOntain result. s:%s substr:%s", s, wrongSubstr)
+	}
+
+	log.Println("IsContain success")
+
+	fmt.Println(string(0x639))
+}
+
+func test7() {
+	var buf bytes.Buffer
+
+	buf.WriteByte('a')
+	buf.WriteString("li")
+	buf.WriteRune(0x0639)
+	fmt.Fprintf(&buf, "%d", 66)
+	s := buf.String()
+	fmt.Println(s)	// "ali66"
+	
+	s1 := fmt.Sprintf("%d %[1]b %[1]x", 123)
+	fmt.Println(s1)
+}
+
+func IsPrefix( s string, prefix string) bool {
+	return (len(s) >= len(prefix) && (s[:len(prefix)] == prefix))
+}
+
+func IsContain(s string, substr string) bool{
+	for i:=0; i<len(s)-len(substr); i++ {
+		if IsPrefix(s[i:], substr) {
+			return true
+		}
+	}
+	return false
 }
