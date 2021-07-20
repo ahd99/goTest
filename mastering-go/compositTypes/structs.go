@@ -18,16 +18,18 @@ type Employee struct {
 }
 
 func test1() {
-	var eme1 Employee
+	var eme1 Employee // structs are value type. so eme1 is not nil and is a Employee that all fields have zero-value
 	fmt.Println(eme1) //zero value of struct is composed of zero value of all its fields: {0 "" "" 0 0 0 <nil>}
 
 	type emptyStruc struct{} //emptystruct. zero size, no data
 
 	//struct literal 1 : wihtout fields name and only values. need all fields in struct definition order
 	eme2 := Employee{2001, "ali", 30, 30000, 1001, nil}
+	fmt.Println(eme2)
 
 	//struct literal 2: with fields name and corresponding values. if a field name ommited in literal, it get zero-value. order is not important
 	eme5 := Employee{Age: 30, ID: 2001, Name: "ali"} // other fields get zero-value (Acording their type)
+	fmt.Println(eme5)
 
 	var em1 Employee
 	em1.ID = 1001

@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
 	test1()
@@ -15,11 +17,11 @@ const (
 )
 
 const (
-	_ = 1 + iota	// 1 + 0
-	a1				// 1 + 1
-	a2				// 1 + 2
-	a3				// 1 + 3
-	a4				// 1 + 4
+	_  = 1 + iota // 1 + 0
+	a1            // 1 + 1
+	a2            // 1 + 2
+	a3            // 1 + 3
+	a4            // 1 + 4
 )
 
 func test1() {

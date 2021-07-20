@@ -5,11 +5,31 @@ import "fmt"
 func main() {
 	test1()
 	// test2()
+	test3()
 
 }
 
 func test1() {
-	var a [3]int // [0 0 0] define arrya of int with3 elements from a[0] to a[2]. all elements get zero-value
+	/*
+		- arrays are fixed length sequence of elements of a particular type
+		- Array index is started from 0 to len-1
+		- Size of an array is part of its type, so [3]int and [4]int are different types.
+		- Two arrays are comparable and assignable if both element type and length are the same. So [2]int and [3]int can not be compare or assign to each other
+		- If 2 arrays are comparable, we can compare them by == and != operators. 2 arrays are equal when the values of all corresponding elements are equal.
+
+
+	*/
+
+	// define arrya of int with 3 elements from a[0] to a[2]. all elements get zero-value
+	// In array declaration, Len of array must be const (can evaluate at compile time)
+	// By default Elements of a new array are set to zero-value.
+	var a [3]int // [0 0 0]
+
+	fmt.Println(len(a)) // 3 len() method return number of elements in array
+
+	// Arrays can not be nil and can not be compare with nil (cause compile error). array with zero len is empty array:
+	var a0 [0]int            //len(a) == 0	a: []
+	fmt.Println(len(a0), a0) // 0 []
 
 	a[0] = 2 // [2 0 0 ]
 
@@ -17,11 +37,11 @@ func test1() {
 		fmt.Printf("%d  %d\n", i, v)
 	}
 
-	for i := range a {
+	for i := range a { // i: index(0..2)
 		fmt.Println(i) //print indexes
 	}
 
-	for _, v := range a {
+	for _, v := range a { // v:value
 		fmt.Println(v) //print vlaues
 	}
 
@@ -60,6 +80,14 @@ func incrementArray(a [3]int) {
 }
 
 func test3() {
+
+	/*
+		golang function arguments are passed by value and arrays are value type (not reference type).
+		So in function calls, array arguments will be copied to function parameters.
+		So a change in array elements has no effect on the array in the caller function.
+		To solve this, use pointer to array (*[3]int) to send array reference.
+	*/
+
 	array := [3]int{1, 2, 3}
 
 	increaseArray_V(array)
@@ -69,6 +97,10 @@ func test3() {
 	fmt.Printf("%v\n", array)
 
 	zeroArray(&array)
+	fmt.Printf("%v\n", array)
+
+	array = [3]int{1, 2, 3}
+	zeroArray1(&array)
 	fmt.Printf("%v\n", array)
 }
 
@@ -85,5 +117,9 @@ func increaseArray_P(a *[3]int) {
 }
 
 func zeroArray(b *[3]int) {
-	*b = [3]int{}
+	*b = [3]int{} // change has effect on caller because b points to array sent from caller and *b will change that array value
+}
+
+func zeroArray1(b *[3]int) {
+	b = &[3]int{} //change dont effect on caller. because now b point to another array not array received in argument
 }

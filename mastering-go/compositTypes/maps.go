@@ -11,7 +11,7 @@ func main() {
 }
 
 func test1() {
-	// maps: a refernce to ahsh table
+	// maps: a refernce to ahsh table.
 	// key type must be cmparable with ==
 
 	// declare a map. // zero-value of map itself is nil so m == nil
