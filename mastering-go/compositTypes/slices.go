@@ -7,39 +7,69 @@ func main() {
 	//test2()
 }
 
+/*
+	- slice itself is a value type that has 3 data: len, capacity and a pointer to its underlying array (pointer to element of underlying array that is first element of slice)
+	- slice len is number of elements of underlying array that currently is in slice
+	- slice capacity is number of elements in underlying array that can be used by slice without need to change or extend underlying array
+		that is number of elements from first elementy of slice until end of underlying array.
+	- multiple slice can point to one underlying array and can have overlap.
+	- when send a slice to a function as argument, change on value of underlying array elements is visible to caller. but change on slice itself
+		(changing len or point to another underlying array) is not visible to caller function.
+*/
+
 func test1() {
 	// slices are vlaue type containig a len, a cap and a pointer to underlying array (to its start indesx in underlying array)
 	var s1 []int // len(s) == 0, s == nil  define a slice with zero value. zero value of slices are nil.
 	logSlice_int(s1, "S1")
-	s1 = []int{} // len(s) == 0, s != nil
+	s1 = []int{} // len(s) == 0, s != nil	define an empty slice
 	s1 = nil     // len(s) == 0, s == nil
 	// nil slices and non-nil emapty slices behave the same. use len(s) == 0 for checking empty slice, not s == nil
 
-	numbersArray := [...]int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9} //array
-	n0 := numbersArray[2:7]                                // [2 3 4 5 6]  len:5  cap:8  create slice from array. numbersArray is underlying array for slice n0
-	logSlice_int(n0, "n0")
-
-	numbers := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9} //[0 1 2 3 4 5 6 7 8 9]  len:10  cap:10  create slice by slice literal. underlying array has 10 elements
+	// create slice by slice literal. a new underlying array is created with 10 elements
+	numbers := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9} //[0 1 2 3 4 5 6 7 8 9]  len:10  cap:10
 	logSlice_int(numbers, "numbers")
 
-	n1 := numbers[2:7] //[2 3 4 5 6]  len:5  cap:8  create slice from another slice. n1 and numbers share same underlying array
-	logSlice_int(n1, "n1")
+	// create slice with make
+	len, cap := 10, 20
+	// create an underlying array of length = cap and create a slice of length = len on it. if remove capacity, capacity will be equal to len
+	n00 := make([]int, len, cap) //[0 0 0 0 0 0 0 0 0 0]  len:10  cap:20
+	n00 = make([]int, cap)[:len] //[0 0 0 0 0 0 0 0 0 0]  len:10  cap:20 - equals to make(int[], len, cap)
+	logSlice_int(n00)
 
+	// slice operator: ns := s[i:j]
+	// creates a new slice ns with type same as s and refers to s[i] to s[j-i] elements of s.
+	// s can be array, pointer to array or another slice
+	// ns will use uderlying array of s. so if [i:j] was out of range of underlying array => Error panic
+	// 0 <= i <= j <= cap(s) if i, j was out of this limits => Panic Error (if s is array, cap(s) is equal to len(s))
+	// len(ns) is j-i
+	// cap(ns): number of elements in underlying array from element specified by i until end of underlying array.
+	// if s is array: cap(ns) = len(s) - i
+	// if s is slice: cap(ns) = cap(s) - i
+	// s[:] is equal to s[0:len(s)]
+
+	// create slice from array. numbersArray is underlying array for slice n0
+	numbersArray := [...]int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9} //array
+	n0 := numbersArray[2:7]                                // [2 3 4 5 6]  len:5  cap:8
+	// if index is out of underlying array => compile error
+	//n0 = numbersArray[2:11] // Error : invalid slice index 11 (out of bounds for 10-element array)
+	logSlice_int(n0, "n0")
+
+	//create slice from another slice. n1 and numbers share same underlying array
+	n1 := numbers[2:7] //[2 3 4 5 6]  len:5  cap:8
+	logSlice_int(n1, "n1")
+	//n3 := n1[:9]		// panic. because j > cap(n1)
+
+	//----------------------------
 	n2 := numbers[3:9]
-	logSlice_int(n2, "n2")
+	logSlice_int(n2, "-- n2") //[3 4 5 6 7 8]  len:6  cap:7
 
-	n1[1] = 30
-	logSlice_int(n1, "n1")
-	logSlice_int(n2, "n2")
-
-	fmt.Println(sliceEqualElementsCount(n1, n2))
-	logSlice_int(sliceEqualElements(n1, n2))
-
-	//n3 := n1[:9]		// panic
-	//logSlice_int(n3)
+	n1[1] = 30                // n1 and n2 use same unserlying array so change on n1 has effect on n2
+	logSlice_int(n1, "-- n1") //[2 30 4 5 6]  len:5  cap:8
+	logSlice_int(n2, "-- n2") //[30 4 5 6 7 8]
 
 	fmt.Println("--------------------------------")
 
+	//---------------------------- append
 	logSlice_int(numbers, "numbers") //[0 1 2 30 4 5 6 7 8 9]  len:10  cap:10
 	logSlice_int(n1, "n1")           // [2 30 4 5 6]  len:5  cap:8
 	//append an element at the end of slice. if slice has enough capacity (capacity >= len + 1), slice grows on current underlying array,
@@ -71,27 +101,15 @@ func test1() {
 	// 	//----
 	// }
 
-	if n1 == nil { // only slice comparison is against nil
+	if n1 == nil { // only supported slice comparison is against nil
 		fmt.Println("nil")
 	}
 
 	fmt.Println(nonEmptyStrings([]string{"", "a", "", "b", "c", ""}))
 	fmt.Println(nonEmptyStrings2([]string{"", "a", "", "b", "c", ""}))
-}
 
-func test2() {
-	len, cap := 10, 20
-	a := make([]int, len, cap) //[0 0 0 0 0 0 0 0 0 0]  len:10  cap:20  - create an underlying array of length = cap and create a slice of length = len on it. if remove capacity, capacity will be eqyal to len
-	//a = make([]int, cap)[:len] //[0 0 0 0 0 0 0 0 0 0]  len:10  cap:20 - equals to make(int[], len, cap)
-	logSlice_int(a)
-
-	numbers := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-	a1 := numbers[1:5]
-	logSlice_int(a1, "a1")
-
-	a1 = append(a1, -1)
-	logSlice_int(numbers, "numbers")
-	logSlice_int(a1, "a1")
+	fmt.Println(sliceEqualElementsCount(n1, n2))
+	logSlice_int(sliceEqualElements(n1, n2))
 
 }
 
