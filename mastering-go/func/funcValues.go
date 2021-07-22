@@ -81,6 +81,7 @@ func test2() {
 	func(s string) {
 		fmt.Printf("Hello %s", s)
 	}("ali")
+
 }
 
 // functions can return function value

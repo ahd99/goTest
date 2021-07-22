@@ -24,7 +24,8 @@ func test1() {
 	s1 = []int{} // len(s) == 0, s != nil	define an empty slice
 	s1 = nil     // len(s) == 0, s == nil
 	// nil slices and non-nil emapty slices behave the same. use len(s) == 0 for checking empty slice, not s == nil
-
+	// fmt.Println(s1[1])  // panic: runtime error: index out of range [1] with length 0
+ 
 	// create slice by slice literal. a new underlying array is created with 10 elements
 	numbers := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9} //[0 1 2 3 4 5 6 7 8 9]  len:10  cap:10
 	logSlice_int(numbers, "numbers")

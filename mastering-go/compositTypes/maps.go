@@ -27,7 +27,8 @@ func test1() {
 	
 	// Most operations on map like lookup, delete, ken, range are safe on nil map and are like empty map.
 	//but store value to nil map causes panic:
-	// m[1] = "name"	// panic. because m == nil. map must be allocated before use for storing data
+	//m[1] = "name"	// panic. because m == nil. map must be allocated before use for storing data. anic: assignment to entry in nil map
+	fmt.Println("lookup nil map: ", m1[25]) // ""  nil maps are like empty maps (except when assign to them)
 
 	m1[10] = "ali"  //sunbscript notation. if key=10 is not exist, create it and if exist edit it
 	m1[20] = "reza"
