@@ -71,27 +71,33 @@ func (c Circle) String() string {
 
 func test1() {
 	var draw1 Drawable
-	var Paint1 Paintable
+	var paint1 Paintable
 	var diag1 Diagram
 
 	s1 := Square{Size: 10}
 	c1 := Circle{Radius: 100}
 
 	// draw1 = s1	// ERROR: cannot use s1 (type Square) as type Drawable in assignment: Square does not implement Drawable (Draw method has pointer receiver)
-	// Paint1 = s1	// ERROR
-	// diag1 = s1	// ERROR
+	 // diag1 = s1	// ERROR : cannot use s1 (type Square) as type Diagram in assignment: Square does not implement Diagram (Area method has pointer receiver)
+	
+	paint1 = s1	
 	draw1 = &s1
-	Paint1 = s1
-	Paint1 = &s1
+	paint1 = s1
+	paint1 = &s1
 	diag1 = &s1
+
+	// paint1 = draw1	// cannot use draw1 (type Drawable) as type Paintable in assignment: Drawable does not implement Paintable (missing Paint method)
+	// diag1 = paint1	//cannot use paint1 (type Paintable) as type Diagram in assignment: Paintable does not implement Diagram (missing Area method)
+	paint1 = diag1
+	draw1 = diag1
 
 	draw1 = c1
 	draw1 = &c1
-	Paint1 = c1
-	Paint1 = &c1
+	paint1 = c1
+	paint1 = &c1
 
 	_ = draw1
-	_ = Paint1
+	_ = paint1
 	_ = diag1
 	_ = s1
 	_ = c1
