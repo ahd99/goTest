@@ -90,24 +90,27 @@ func test1() {
 	PrintValue(c1, "c1")
 
 	// draw1 = s1	// ERROR: cannot use s1 (type Square) as type Drawable in assignment: Square does not implement Drawable (Draw method has pointer receiver)
-	// Paint1 = s1	// ERROR
-	// diag1 = s1	// ERROR
 	draw1 = &s1
 	PrintValue(draw1, "draw1 = &s1")
+
 	Paint1 = s1
 	PrintValue(Paint1, "Paint1 = s1")
 	Paint1 = &s1
-	diag1 = &s1
 
-	draw1 = diag1
-	PrintValue(draw1, "draw1 = diag1")
-	PrintValue(diag1, "diag1")
-	Paint1 = diag1
+	// diag1 = s1	// ERROR
+	diag1 = &s1
 
 	draw1 = c1
 	draw1 = &c1
 	Paint1 = c1
 	Paint1 = &c1
+	//diag1 = c1 	//ERROR
+	//diag1 = &c1	//ERROR
+
+	draw1 = diag1
+	PrintValue(draw1, "draw1 = diag1")
+	PrintValue(diag1, "diag1")
+	Paint1 = diag1
 
 	// draw1 = Paint1  //ERROR: cannot use Paint1 (type Paintable) as type Drawable in assignment: Paintable does not implement Drawable (missing Draw method)
 	// diag1 = Paint1  //ERROR: cannot use Paint1 (type Paintable) as type Diagram in assignment: Paintable does not implement Diagram (missing Area method)
