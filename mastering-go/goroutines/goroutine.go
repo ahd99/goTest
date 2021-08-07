@@ -9,7 +9,9 @@ import (
 // when main functions returns (means main goroutine terminates) all other goroutines are suddenly terminated and program exits.
 // there is not any way for one goroutine to stop another goroutine (each goroutine only able to stop itself)
 func main() {
-	spinner(100 * time.Millisecond)
+	test1()
+	fmt.Println("------------------- test2 ------")
+	test2()
 }
 
 func test1() {
@@ -28,4 +30,8 @@ func spinner(delay time.Duration) {
 			time.Sleep(delay)
 		}
 	}
+}
+
+func test2() {
+	
 }

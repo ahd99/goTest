@@ -1,10 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func main() {
 	test1()
 	fmt.Println("------------------- test2 ------")
+	test2()
+	fmt.Println("------------------- test3 ------")
+	test3()
 }
 
 //channel is a thread safe communication mechanism for sending data from a goroutine to another goroutine
@@ -17,7 +23,7 @@ func test1() {
 	numbers = make(chan int) // numbers != nil - create a unbuffered (queue size = 0) channel of type int.
 	fmt.Printf("%T\t%v\n", numbers, numbers)
 
-	numbers1 := make(chan int, 5) // create a buffered channel wit capacity 5
+	numbers1 := make(chan int, 5) // create a buffered channel wit capacity 5. capacity means max size of queue inside buffered channel.
 	fmt.Printf("%T\n", numbers1)
 
 	// channel are comparable by == or !=
@@ -77,5 +83,60 @@ func test1() {
 }
 
 func test2() {
+	// uni-directional channels ---------
+	abort := make(chan bool) // abort is bidirectional so we can call both send and receive on it
 
+	// send only channel. wrong use cause compile error
+	// in calling following method with abort channel, abort convert implicitly to send-only channel
+	// convert from bidirectional chanel to uni-directional is valid but the opposit is not possible
+	go func(abort chan<- bool) {	// this abort (local to anonymous function) is a send-only channel
+		time.Sleep(1 * time.Second)
+		abort <- true
+		abort <- true
+	}(abort)
+
+	// receive only channel. wrong use cause compile error
+	// call close() on a receive only channel cause compile tine error
+	go func(abort <-chan bool) {	// this abort (local to anonymous function) is a receive-only channel
+		<- abort
+		fmt.Println("received")
+	}(abort)
+
+	time.Sleep(2 * time.Second)
+}
+
+
+func test3() {
+	// buffered channels
+	numbers := make(chan int, 3) // a buffered channel with capacity 3 and current len 0
+	//cap(channel) : channel capacity 
+	fmt.Println("cap:", cap(numbers))	// "3"
+	//len(channel) : numbers of values currently in channel queue
+	l := len(numbers)	// "0"
+	fmt.Println("len:", l)
+	numbers <- 2	// send doesn't vlock because numbers is buffered channel with capacity 3
+	numbers <- 3
+	l = len(numbers)	// "2"  
+	fmt.Println("len:", l)
+	// cap(numbers)==3, len(numbers)==2, so channel is not full and is not empty, so both send and receive on it dont blocked
+	numbers <- 4
+	fmt.Println("len:", len(numbers))
+	// now cap(numbers)==3, len(numbers)==3, so channel is full, so send on it blocks but receive on it does't block
+	// numbers <- 5  //cause deadlock
+	n1 := <-numbers		// n1==2	channel buffer like as queue (FIFO), first send item is received first
+	fmt.Println("n1:", n1)
+	n1 = <-numbers
+	n1 = <- numbers
+	fmt.Println("n1:", n1)
+	fmt.Println("len:", len(numbers))
+	// now len(numbers)==0, so channel is empty, so receive on it blocks but send does'nt block
+	// <- numbers	// cause deadlock
+	numbers <- 3	// len(numbers) == 1
+
+
+
+	// goroutine leak: when a goroutine block sending or receiving from a channel and never another goroutine receive or send to that channel, 
+	// and this goroutine will be remained forever. 
+	// this blocked (leaked) goroutines doesn't reclaimed by GC automatically and if create a lot of them causes app to crash or run out of mempory
+	
 }
