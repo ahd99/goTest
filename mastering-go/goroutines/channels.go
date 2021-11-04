@@ -65,7 +65,7 @@ func test1() {
 	fmt.Println(n, ok) // 0, false
 
 	// we can use range loop on a channel for receiving data. range loop receive all values send on channel and block when waiting for data and
-	// terinates when channel closed and drained
+	// terminates when channel closed and drained
 
 	numbers20 := make(chan int, 5)
 	go func() {
