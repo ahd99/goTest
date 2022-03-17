@@ -16,7 +16,7 @@ func main() {
 //channel is a thread safe communication mechanism for sending data from a goroutine to another goroutine
 func test1() {
 
-	// declare a channel with element type = int
+	// declare a channel with elements of type int
 	// chanels are reference type so its zero value is nil. sending/receiving on nil channels is valid and blocks forever.
 	// when we copy a channel by assignment or pass it as argument to function, both refer to the same underlying channel
 	var numbers chan int     // chan == nil
@@ -39,8 +39,8 @@ func test1() {
 	}
 
 	// because numbers is a unbuffered channel, call send on it, blocks sender goroutin until anoher goroutine call receive on it, at whitch point
-	// the value trnsmitted from sender to receiver and bith goroutines continue their execution
-	// and call recieve on it, blocks receiver goroutin until anoher goroutine call send on it
+	// the value trnsmitted from sender to receiver and both goroutines continue their execution
+	// also call recieve on it, blocks receiver goroutin until anoher goroutine call send on it
 	// sending and receiving on unbufered channel cause sender and receiver goroutines to synchronised.
 	// when a value is sent on an unbuffered channel, the receipt of the value in receive goroutine "happens before" the reawakening of sending goroutine
 	// so need to call one of send or receive in another goroutine. removing go keyword (so calling receive from numbers channel in main goroutine),
@@ -64,7 +64,7 @@ func test1() {
 	n, ok := <-numbers // numbers is closed and no data is waiting to be received so ok is false
 	fmt.Println(n, ok) // 0, false
 
-	// we can use range loop on a channel for receiving data. range loop receive all values send on channel and block when waiting for data and
+	// we can use range loop on a channel for receiving data. range loop receive all values sent on channel and block when waiting for data and
 	// terminates when channel closed and drained
 
 	numbers20 := make(chan int, 5)
@@ -96,7 +96,7 @@ func test2() {
 	}(abort)
 
 	// receive only channel. wrong use cause compile error
-	// call close() on a receive only channel cause compile tine error
+	// call close() on a receive only channel cause compile time error
 	go func(abort <-chan bool) { // this abort (local to anonymous function) is a receive-only channel
 		<-abort
 		fmt.Println("received")
@@ -113,7 +113,7 @@ func test3() {
 	//len(channel) : numbers of values currently in channel queue
 	l := len(numbers) // "0"
 	fmt.Println("len:", l)
-	numbers <- 2 // send doesn't vlock because numbers is buffered channel with capacity 3
+	numbers <- 2 // send doesn't block because numbers is buffered channel with capacity 3
 	numbers <- 3
 	l = len(numbers) // "2"
 	fmt.Println("len:", l)
@@ -124,8 +124,9 @@ func test3() {
 	// numbers <- 5  //cause deadlock
 	n1 := <-numbers // n1==2	channel buffer like as queue (FIFO), first send item is received first
 	fmt.Println("n1:", n1)
-	n1 = <-numbers
-	n1 = <-numbers
+
+	fmt.Println(<-numbers) //read a value from channel and print it
+	n1 = <-numbers         // read a value from channel and assign it to n1
 	fmt.Println("n1:", n1)
 	fmt.Println("len:", len(numbers))
 	// now len(numbers)==0, so channel is empty, so receive on it blocks but send does'nt block

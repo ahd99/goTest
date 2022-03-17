@@ -16,7 +16,7 @@ func main() {
 }
 
 func printFibunacciSeries(n int64) {
-	for i:=int64(1); i<=n; i++ {
+	for i := int64(1); i <= n; i++ {
 		fmt.Printf("%d\t", fibunacci(i))
 	}
 	fmt.Println()
@@ -26,16 +26,15 @@ func fibunacci(n int64) int64 {
 	if n < 2 {
 		return n
 	}
-	return fibunacci(n - 1) + fibunacci(n - 2)
+	return fibunacci(n-1) + fibunacci(n-2)
 }
 
 func spinner(delay time.Duration) {
 	//fmt.Println("------")
 	for {
-		for _, c := range `-/|\`{
+		for _, c := range `-/|\` {
 			fmt.Printf("\r%c", c)
 			time.Sleep(delay)
 		}
 	}
 }
-

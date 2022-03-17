@@ -20,6 +20,8 @@ type Employee struct {
 func test1() {
 	var eme1 Employee // structs are value type. so eme1 is not nil and is a Employee that all fields have zero-value
 	fmt.Println(eme1) //zero value of struct is composed of zero value of all its fields: {0 "" "" 0 0 0 <nil>}
+	eme1_ := Employee{}
+	fmt.Println(eme1_) // similar to above, eme1_ is empty Employee struct. all elements have zero value. eme1_ != nil
 
 	type emptyStruc struct{} //emptystruct. zero size, no data
 

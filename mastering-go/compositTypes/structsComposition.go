@@ -50,7 +50,7 @@ func test2() {
 	w.Spokes = 5
 
 	w.Circle.Radius = 6 //Circle is anonymous field in Wheel so we use its type as name for accessing its fields
-	w.Radius = 10       // using Circle name is optional for accessing its fields because it is anonnumous filed n Wheel struct
+	w.Radius = 10       // using Circle name is optional for accessing its fields because it is anonnumous filed in Wheel struct
 	w.Circle = Circle{Center: Point{1, 2}, Radius: 20}
 
 	w.Circle.Center.X = 7
@@ -67,7 +67,7 @@ func test2() {
 	//literal format 2
 	w1 = Wheel{Spokes: 30, Circle: Circle{Center: Point{5, 6}, Radius: 20}}
 
-	//it is nor possible to have two anonyn=mous field of the same type because of name conflict
+	//it is nor possible to have two anonymous field of the same type because of name conflict
 
 	// suppose circle type is defined like circle{X,Y int} (circle itself with lowercase first letter but its fields are exported)
 	//and Wheel define it as anonymous field. in another packages (w is of type Wheel):
@@ -100,13 +100,6 @@ func test3() {
 	w1 := Wheel1{&Circle{Point{5, 6}, 20}, 30}
 	//literal format 2
 	w1 = Wheel1{Spokes: 30, Circle: &Circle{Center: Point{5, 6}, Radius: 20}}
-
-	//it is nor possible to have two anonyn=mous field of the same type because of name conflict
-
-	// suppose circle type is defined like circle{X,Y int} (circle itself with lowercase first letter but its fields are exported)
-	//and Wheel define it as anonymous field. in another packages (w is of type Wheel):
-	// w.circle.X	raise compile error because circle name is not exported
-	// but w.X is ok and X is accessible from other packages.
 
 	fmt.Printf("%#v\n%#v\n", w, w1)
 }

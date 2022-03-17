@@ -51,7 +51,7 @@ func (s Square) Paint(color int) string {
 	return str
 }
 
-// *square implement Diagram.Aread.
+// *square implement Diagram.Area.
 // and because implement Paintable.Paint and Drawable.Draw so Square is implemented Diagram
 func (s *Square) Area() string {
 	area := s.Size * s.Size
@@ -189,7 +189,7 @@ func test3() {
 	var dig1 Diagram
 	dig1 = &s1
 
-	//a1, ok := dig1.Square //ERROR: impossible type assertion: Square does not implement Diagram (Area method has pointer receiver)
+	//a1, ok := dig1.(Square) //ERROR: impossible type assertion: Square does not implement Diagram (Area method has pointer receiver)
 	// a2, ok := dig1.(Circle) //ERROR: impossible type assertion: Circle does not implement Diagram (missing Area method)
 
 	a1, ok := dig1.(*Square)

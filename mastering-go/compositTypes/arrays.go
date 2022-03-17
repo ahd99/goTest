@@ -14,18 +14,19 @@ func test1() {
 		- arrays are fixed length sequence of elements of a particular type
 		- Array index is started from 0 to len-1
 		- Size of an array is part of its type, so [3]int and [4]int are different types.
-		- Two arrays are comparable and assignable if both element type and length are the same. So [2]int and [3]int can not be compare or assign to each other
-		- If 2 arrays are comparable, we can compare them by == and != operators. 2 arrays are equal when the values of all corresponding elements are equal.
-
-
+		- Two arrays are comparable and assignable if both element type and length are the same. 
+			So [2]int and [3]int can not be compare or assign to each other
+		- If 2 arrays are comparable, we can compare them by == and != operators. 
+			2 arrays are equal when the values of all corresponding elements are equal.
 	*/
 
-	// define arrya of int with 3 elements from a[0] to a[2]. all elements get zero-value
+	// define arrya of int with 3 elements from a[0] to a[2]. all elements get zero-value.
 	// In array declaration, Len of array must be const (can evaluate at compile time)
 	// By default Elements of a new array are set to zero-value.
 	var a [3]int // [0 0 0]
 
-	fmt.Println(len(a)) // 3 len() method return number of elements in array
+	// len() method return number of elements in array
+	fmt.Println(len(a)) // "3"
 
 	// Arrays can not be nil and can not be compare with nil (cause compile error). array with zero len is empty array:
 	var a0 [0]int            //len(a) == 0	a: []
@@ -45,12 +46,12 @@ func test1() {
 		fmt.Println(v) //print vlaues
 	}
 
-	a[1] = 3                                     // change an element value in the array
-	a = [3]int{9, 8, 7}                          // "[9 8 7]"  -> assig a new array to variable(not only change element value)
+	a[1] = 3     // change an element value in the array
+	a = [3]int{9, 8, 7}    // "[9 8 7]"  -> assig a new array to variable(not only change element value)
 	fmt.Printf("%T  %v  len:%d\n", a, a, len(a)) //[3]int  [9 8 7]  len:3
 	//a = [4]int{1, 2, 3, 4} //compile error. bcause type [4]int is different from [3]int (type a)
 
-	var b [4]int = [4]int{1, 2, 3} // [1 2 3 0] declare array and initialize first 3 elements. b[3] will be initialized with zero-value:
+	var b [4]int = [4]int{1, 2, 3} // [1 2 3 0] -> declare array and initialize first 3 elements. b[3] will be initialized with zero-value:
 	c := [2]int{1, 2}              // [1 2]
 
 	d := [...]int{1, 2, 3, 4, 5} // [1 2 3 4 5] array length is determined by number of init elements. len(d) = 5

@@ -1,11 +1,17 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 )
 
 func main() {
+	readEntireFile()
+	openAndReadFile()
+}
+
+func readEntireFile() {
 	// read file as []byte (byte slice)
 	bytes, err := os.ReadFile("encodings/file.txt")
 	if err != nil {
@@ -34,5 +40,27 @@ func main() {
 	}
 
 	fmt.Printf("\nrunes len: %d\n", len(runes))
+
+}
+
+func openAndReadFile() {
+	var f *os.File
+	f, err := os.OpenFile("encodings/file.txt", os.O_RDONLY | os.O_CREATE, 0777)
+	if err != nil {
+		fmt.Println("Error openning file. err:", err)
+		os.Exit(1)
+	}
+	defer f.Close()
+
+	b := make([]byte, 20)
+
+	reader := bufio.NewReader(f)
+
+	n, err := reader.Read(b)
+	if err != nil {
+		fmt.Println("Error reading from file. err: ", err)
+		os.Exit(1)
+	}
+	fmt.Printf("%d bytes read:\n %s\n", n, string(b[:n]))
 
 }

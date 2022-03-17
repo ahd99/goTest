@@ -11,26 +11,26 @@ func main() {
 }
 
 func test1() {
-	// maps: a refernce to hash table.
+	// maps: a refernce to hash table. so map is reference type.
 	// key type must be cmparable with ==
 
-	// declare a map. // zero-value of map itself is nil so m == nil
-	var m map[int]string	//m == nil    len(m)==0
-	fmt.Println(m)	// map[]
+	// declare a map. // zero-value of map itself, is nil so m == nil
+	var m map[int]string //m == nil    len(m)==0
+	fmt.Println(m)       // map[]
 
 	// create by make
-	m1 := make(map[int]string)	// m1 != nil	len(m1) == 0
+	m1 := make(map[int]string) // m1 != nil	len(m1) == 0
 	fmt.Println(m1)
-	
+
 	fmt.Println(m == nil, m1 == nil) //true	false
 	fmt.Println(len(m), len(m1))     // 0 0
-	
-	// Most operations on map like lookup, delete, ken, range are safe on nil map and are like empty map.
-	//but store value to nil map causes panic:
-	//m[1] = "name"	// panic. because m == nil. map must be allocated before use for storing data. anic: assignment to entry in nil map
-	fmt.Println("lookup nil map: ", m1[25]) // ""  nil maps are like empty maps (except when assign to them)
 
-	m1[10] = "ali"  //sunbscript notation. if key=10 is not exist, create it and if exist edit it
+	// Most operations on map like lookup, delete, len, range are safe on nil map and are like empty map.
+	//but store value to nil map causes panic:
+	//m[1] = "name"	// panic. because m == nil. map must be allocated before use for storing data. panic: assignment to entry in nil map
+	fmt.Println("lookup nil map: ", m1[25]) // "" -> nil maps are like empty maps (except when assign to them)
+
+	m1[10] = "ali" //sunbscript notation. if key=10 is not exist, create it and if exist edit it
 	m1[20] = "reza"
 
 	fmt.Println(m1[20]) //in subscript notation (m1[20]) if key=20 exists, returns its value, if not exist return zero-value of value type (int)
@@ -38,7 +38,7 @@ func test1() {
 	r1 := m1[1000]            // r1 == "" because key 1000 is not exist
 	fmt.Println(r1, r1 == "") // "" true
 
-	r2, ok := m1[1000] //if key=1000 exist: ok==true r2==value	- if key = 1000 is not exist: ok==false r2 == ""( vlaue-type zero-value)
+	r2, ok := m1[1000] //if key=1000 exist: ok==true r2==value, if key = 1000 is not exist: ok==false r2 == ""( vlaue-type zero-value)
 	fmt.Println(r2, ok)
 
 	//create by map literal
@@ -51,7 +51,7 @@ func test1() {
 	}
 
 	// built-in len function
-	fmt.Println("map element count: ", len(m2))	//map element count:  5
+	fmt.Println("map element count: ", len(m2)) //map element count:  5
 
 	delete(m2, 20) //remove item with key = 20
 

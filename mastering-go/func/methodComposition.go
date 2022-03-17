@@ -50,15 +50,15 @@ func test1() {
 	_ = n1
 	
 	fmt.Println(c1)	//{{3 2} 10}
-	// because Point is embedded in ColoredPoint, there us access to Point methods from ColoredPoint 
+	// because Point is embedded in ColoredPoint, there is access to Point methods from ColoredPoint 
 	// the methods of Point have been promoted to ColoredPoint
 	p1 := c1.incrementBy(2)
 	fmt.Println(c1, p1)	//{{3 2} 10} {5 4}
 	c1.ScaleBy(3)
-	fmt.Println(c1)	//{{3 2} 10} {5 4}
+	fmt.Println(c1)	//{{9 6} 10}
 
 	/*
-	when compiler resolve resolve a selector such as p.ScaleBy to its method (means search to find ScaleBy), it first
+	when compiler resolve a selector such as p.ScaleBy to its method (means search to find ScaleBy), it first
 	looks for a directly declared method name ScalBy, then for methods promoted once from directly embedded types, then for methods 
 	promoted twice from embedded types and so on.
 	if two method with same name are promoted from the same level => compile ERROR

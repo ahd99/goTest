@@ -8,10 +8,11 @@ func main() {
 }
 
 /*
-	- slice itself is a value type that has 3 data: len, capacity and a pointer to its underlying array (pointer to element of underlying array that is first element of slice)
+	- slice itself is a value type that has 3 data: len, capacity and a pointer to its underlying array
+		(pointer to element of underlying array that is first element of slice)
 	- slice len is number of elements of underlying array that currently is in slice
 	- slice capacity is number of elements in underlying array that can be used by slice without need to change or extend underlying array
-		that is number of elements from first elementy of slice until end of underlying array.
+		that is number of elements (in underlying array) from first element of slice until end of underlying array.
 	- multiple slice can point to one underlying array and can have overlap.
 	- when send a slice to a function as argument, change on value of underlying array elements is visible to caller. but change on slice itself
 		(changing len or point to another underlying array) is not visible to caller function.
@@ -25,20 +26,69 @@ func test1() {
 	s1 = nil     // len(s) == 0, s == nil
 	// nil slices and non-nil emapty slices behave the same. use len(s) == 0 for checking empty slice, not s == nil
 	// fmt.Println(s1[1])  // panic: runtime error: index out of range [1] with length 0
- 
+
 	// create slice by slice literal. a new underlying array is created with 10 elements
 	numbers := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9} //[0 1 2 3 4 5 6 7 8 9]  len:10  cap:10
 	logSlice_int(numbers, "numbers")
 
+	nnn_ := numbers[1:1]
+	logSlice_int(nnn_, "------------> ")
+
 	// create slice with make
-	len, cap := 10, 20
+	s_len, s_cap := 10, 20
 	// create an underlying array of length = cap and create a slice of length = len on it. if remove capacity, capacity will be equal to len
-	n00 := make([]int, len, cap) //[0 0 0 0 0 0 0 0 0 0]  len:10  cap:20
-	n00 = make([]int, cap)[:len] //[0 0 0 0 0 0 0 0 0 0]  len:10  cap:20 - equals to make(int[], len, cap)
+	n00 := make([]int, s_len, s_cap) //[0 0 0 0 0 0 0 0 0 0]  len:10  cap:20
+	n00 = make([]int, s_cap)[:s_len] //[0 0 0 0 0 0 0 0 0 0]  len:10  cap:20 - equals to make(int[], len, cap)
 	logSlice_int(n00)
 
+	//append add new item at the end of slice so length increase by one
+	n00 = append(n00, 5) //[0 0 0 0 0 0 0 0 0 0 5]  len:11  cap:20
+	logSlice_int(n00, "n00 -- ")
+
+	// for creating a slice and appending 10 item to it, set cap = 10 (to prevent reallocating underlying array)
+	// and set len to 0 because each call to append add an element to slice
+	n01 := make([]int, 0, 10)
+	for i := 0; i < 10; i++ {
+		n01 = append(n01, i)
+	}
+
+	//or:
+	n02 := make([]int, 10)
+	for i := 0; i < 10; i++ {
+		n02[i] = i
+	}
+
+	// when slice is of value type (e.g. of type of a struct), assignment operator or append copy data to slice
+	// and changing on variables dont effect on slice data
+	type student struct {
+		id   int
+		name string
+	}
+	st0 := student{2, "ali"}
+	st1 := student{3, "reza"}
+	stv := make([]student, 1)
+	stv[0] = st0
+	stv = append(stv, st1)
+	st0.id = 5
+	st1.id = 6
+	fmt.Printf("stv >>> %v  len:%d  cap:%d \n", stv, len(stv), cap(stv)) // stv >>> [{2 ali} {3 reza}]  len:2  cap:2
+	fmt.Println("st0 >>> ", st0)                                         // st0 >>>  {5 ali}
+	fmt.Println("st1 >>> ", st1)                                         // st1 >>>  {6 reza}
+
+	// when slice is of pointer type (e.g. of type of a pointer to struct), assignment operator or append copy onlu address to slice
+	// and changing on variables has effect on slice data
+	stp := make([]*student, 1)
+	stp[0] = &st0
+	stp = append(stp, &st1)
+	fmt.Printf("stp before >>> [%v  %v]  len:%d  cap:%d \n", stp[0], stp[1], len(stp), cap(stp)) // stp >>> [&{8 ali}  &{9 reza}]  len:2  cap:2
+	st0.id = 8
+	st1.id = 9
+	fmt.Printf("stp after  >>> [%v  %v]  len:%d  cap:%d \n", stp[0], stp[1], len(stp), cap(stp)) // stp >>> [&{8 ali}  &{9 reza}]  len:2  cap:2
+	fmt.Println("st0 >>> ", st0)                                                                 // st0 >>>  {5 ali}
+	fmt.Println("st1 >>> ", st1)                                                                 // st1 >>>  {6 reza}
+
 	// slice operator: ns := s[i:j]
-	// creates a new slice ns with type same as s and refers to s[i] to s[j-i] elements of s.
+	// creates a new slice ns with type same as s and refers to s[i] to s[j-1] elements of s.
 	// s can be array, pointer to array or another slice
 	// ns will use uderlying array of s. so if [i:j] was out of range of underlying array => Error panic
 	// 0 <= i <= j <= cap(s) if i, j was out of this limits => Panic Error (if s is array, cap(s) is equal to len(s))
@@ -54,6 +104,9 @@ func test1() {
 	// if index is out of underlying array => compile error
 	//n0 = numbersArray[2:11] // Error : invalid slice index 11 (out of bounds for 10-element array)
 	logSlice_int(n0, "n0")
+
+	n0_ := n0[2:7] // [4 5 6 7 8] -> 7 is bigger than len(n0) but because cap(n0) = 8 the statement dont cause error (0 <= i <= j <= cap(s))
+	logSlice_int(n0_, "n0_")
 
 	//create slice from another slice. n1 and numbers share same underlying array
 	n1 := numbers[2:7] //[2 3 4 5 6]  len:5  cap:8
@@ -75,7 +128,7 @@ func test1() {
 	logSlice_int(n1, "n1")           // [2 30 4 5 6]  len:5  cap:8
 	//append an element at the end of slice. if slice has enough capacity (capacity >= len + 1), slice grows on current underlying array,
 	// if not (capacity < len + 1), create a new underlying array with more size, copy elements to it and add new element.
-	n1 = append(n1, -1)              //  cap(n1) >= len(n1) + 1 so underlying array has enough capacity. n1 slice extend by one on current underlying array and add -1 at last element
+	n1 = append(n1, -1)              //  cap(n1) >= len(n1) + 1 so underlying array has enough capacity. n1 slice len extend by one on current underlying array and add -1 at last element
 	logSlice_int(numbers, "numbers") //[0 1 2 30 4 5 6 -1 8 9]  len:10  cap:10
 	logSlice_int(n1, "n1")           //[2 30 4 5 6 -1]  len:6  cap:8
 	logSlice_int(n2, "n2")           //[30 4 5 6 -1 8] len:6 cap:7	n2 use same underlying array with n1 so change effects n2
@@ -109,7 +162,6 @@ func test1() {
 	fmt.Println(nonEmptyStrings([]string{"", "a", "", "b", "c", ""}))
 	fmt.Println(nonEmptyStrings2([]string{"", "a", "", "b", "c", ""}))
 
-	fmt.Println(sliceEqualElementsCount(n1, n2))
 	logSlice_int(sliceEqualElements(n1, n2))
 
 }
@@ -119,17 +171,6 @@ func logSlice_int(a []int, desc ...string) {
 		desc = []string{""}
 	}
 	fmt.Printf("%s > %v  len:%d  cap:%d \n", desc[0], a, len(a), cap(a))
-}
-
-func sliceEqualElementsCount(x, y []int) (i int) {
-	for a := range x {
-		for b := range y {
-			if a == b {
-				i++
-			}
-		}
-	}
-	return
 }
 
 func sliceEqualElements(x, y []int) []int {
@@ -144,7 +185,7 @@ func sliceEqualElements(x, y []int) []int {
 	return s
 }
 
-// remove epty strings in slice by in-place slice change technique.
+// remove empty strings in slice by in-place slice change technique.
 // at the end new slice is returned because length of slice is changed.
 // so caller must get and assign return value: a = nonEmptyStrings(a)
 func nonEmptyStrings(s []string) []string {

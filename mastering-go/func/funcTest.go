@@ -21,21 +21,22 @@ func test1() {
 //multiple ways to declare a function : f1 to f6
 /*
 - i, j, x, y are function parameters. (values send to this parameters when calleing function, are arguments)
-- x, y are function return values. returns can be named or unnamed. 
+- r, p, s are function return values. returns can be named or unnamed. 
 - parameters and anme returns are local variables. returns initialize by zero-value.
-- int function with return values, using return keywiord is mandatory. 
+- in function with return values, using return keyword is mandatory. 
 
 - signature: type of function. function methods includes order and type of parameters and returns.
-- So two functions are same type if the have the same sequence of parameter types and same sequence of return types. 
-- method name, parameters and returns names are not part of method type.
+- So two functions are same type if they have the same sequence of parameter types and same sequence of return types. 
+- method name, parameters names and returns names are not part of method type.
 
 - go has not default parameter value conceept nor any way to specify parameters by name when calling fumc. 
 
 - arguments are passed by value, so function receive a copy of them.
 
-
-- go use dynamic stack size that start from small size and groes to giga-bytes if needed. so dont worry about stack overflow in method calls specially in recursive calls.
+- go use dynamic stack size that start from small size and groes to giga-bytes if needed. 
+	so dont worry about stack overflow in method calls specially in recursive calls.
 */
+
 func f1(i int, j int, x string, y string) (int, int, string, string) {	
 	return i+j, i-j, x+y, y+x	// when using no-name returns, return must specify a value for each return
 }
